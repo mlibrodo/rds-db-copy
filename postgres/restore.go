@@ -1,33 +1,26 @@
-package provisioner
+package postgres
 
 import (
 	"github.com/mikel-at-tatari/tatari-dev-db/aws/s3"
 	"github.com/mikel-at-tatari/tatari-dev-db/log"
-	"github.com/mikel-at-tatari/tatari-dev-db/postgres"
+	"github.com/mikel-at-tatari/tatari-dev-db/postgres/conn"
 	"github.com/mikel-at-tatari/tatari-dev-db/postgres/pgcommands"
 	"os"
 )
 
-type RestoreFromS3Input struct {
-	S3         s3.S3Object
-	PGConnInfo *postgres.PGConnInfo
+type RestoreFromS3 struct {
+	S3 s3.S3Object
 }
 
-func RestoreFromS3(in RestoreFromS3Input) error {
-	file, _ := os.CreateTemp(TEMP_DIR, "pg_dump-*.sql.tar.gz")
+func (in RestoreFromS3) Exec(pgConnInfo *conn.PGConnInfo) error {
+	file, _ := os.CreateTemp(pgcommands.TEMP_DIR, "pg_dump-*.sql.tar.gz")
 	err := s3.Download(in.S3, file)
 
 	if err != nil {
 		return err
 	}
 
-	pgConnInfo := in.PGConnInfo
-
-	if err != nil {
-		return err
-	}
-
-	createDB(pgConnInfo)
+	err = createDB(pgConnInfo)
 
 	if err != nil {
 		return err
@@ -36,8 +29,8 @@ func RestoreFromS3(in RestoreFromS3Input) error {
 	return restoreFromFile(file, pgConnInfo)
 }
 
-func createDB(pgConnInfo *postgres.PGConnInfo) error {
-	createDB := pgcommands.NewCreateDB(pgConnInfo)
+func createDB(pgConnInfo *conn.PGConnInfo) error {
+	createDB := pgcommands.NewCreateDB(&pgcommands.Conn{pgConnInfo})
 	createDBExec := createDB.Exec()
 
 	if createDBExec.Error != nil {
@@ -64,9 +57,9 @@ func createDB(pgConnInfo *postgres.PGConnInfo) error {
 	return nil
 }
 
-func restoreFromFile(file *os.File, pgConnInfo *postgres.PGConnInfo) error {
+func restoreFromFile(file *os.File, pgConnInfo *conn.PGConnInfo) error {
 
-	pgRestore := pgcommands.NewPGRestore(pgConnInfo, file.Name())
+	pgRestore := pgcommands.NewPGRestore(&pgcommands.Conn{pgConnInfo}, file.Name())
 
 	restoreExec := pgRestore.Exec()
 

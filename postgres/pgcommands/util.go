@@ -3,11 +3,14 @@ package pgcommands
 import (
 	"bufio"
 	"fmt"
-	"github.com/mikel-at-tatari/tatari-dev-db/postgres"
 	"io"
 	"os"
 	"os/exec"
 	"strings"
+)
+
+var (
+	TEMP_DIR = os.TempDir()
 )
 
 func streamExecOutput(out io.ReadCloser) string {
@@ -23,7 +26,7 @@ func streamExecOutput(out io.ReadCloser) string {
 	return output
 }
 
-func GenericExec(pgCommand string, pgConnInfo *postgres.PGConnInfo, parseArgFn func() []string) func() Result {
+func GenericExec(pgCommand string, pgConnInfo *Conn, parseArgFn func() []string) func() Result {
 
 	return func() Result {
 
@@ -41,8 +44,13 @@ func GenericExec(pgCommand string, pgConnInfo *postgres.PGConnInfo, parseArgFn f
 		go func() {
 			result.Output = streamExecOutput(stderrIn)
 		}()
-		cmd.Start()
-		err := cmd.Wait()
+		err := cmd.Start()
+		if err != nil {
+			result.Error = &ResultError{Err: err}
+			return result
+		}
+
+		err = cmd.Wait()
 
 		if exitError, ok := err.(*exec.ExitError); ok {
 			result.Error = &ResultError{Err: err, ExitCode: exitError.ExitCode(), CmdOutput: result.Output}

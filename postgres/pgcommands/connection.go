@@ -1,16 +1,15 @@
-package postgres
+package pgcommands
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/mikel-at-tatari/tatari-dev-db/postgres/conn"
+)
 
-type PGConnInfo struct {
-	DBHost   string
-	DBPort   int32
-	DBName   string
-	Username string
-	Password string
+type Conn struct {
+	*conn.PGConnInfo
 }
 
-func (x *PGConnInfo) PasswordAsEnv() *string {
+func (x *Conn) PasswordAsEnv() *string {
 	if x.Password != "" {
 		s := fmt.Sprintf(`PGPASSWORD=%v`, x.Password)
 		return &s
@@ -19,7 +18,7 @@ func (x *PGConnInfo) PasswordAsEnv() *string {
 	return nil
 }
 
-func (x *PGConnInfo) DBHostAsCmdArg() *string {
+func (x *Conn) DBHostAsCmdArg() *string {
 
 	if x.DBHost != "" {
 		s := fmt.Sprintf("--host=%v", x.DBHost)
@@ -29,7 +28,7 @@ func (x *PGConnInfo) DBHostAsCmdArg() *string {
 	return nil
 }
 
-func (x *PGConnInfo) DBPortAsCmdArg() *string {
+func (x *Conn) DBPortAsCmdArg() *string {
 
 	if x.DBPort != 0 {
 		s := fmt.Sprintf(`--port=%v`, x.DBPort)
@@ -39,7 +38,7 @@ func (x *PGConnInfo) DBPortAsCmdArg() *string {
 	return nil
 }
 
-func (x *PGConnInfo) UsernameAsCmdArg() *string {
+func (x *Conn) UsernameAsCmdArg() *string {
 
 	if x.Username != "" {
 		s := fmt.Sprintf(`--username=%v`, x.Username)
@@ -49,7 +48,7 @@ func (x *PGConnInfo) UsernameAsCmdArg() *string {
 	return nil
 }
 
-func (x *PGConnInfo) DBNameAsCmdArg(argKey *string) *string {
+func (x *Conn) DBNameAsCmdArg(argKey *string) *string {
 
 	if x.DBName != "" {
 		var s string

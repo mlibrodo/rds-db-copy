@@ -1,25 +1,21 @@
 package pgcommands
 
-import (
-	"github.com/mikel-at-tatari/tatari-dev-db/postgres"
-)
-
 var (
 	// PGCreateDBCmd is the path to the `createdb` executable
 	PGCreateDBCmd = "createdb"
 )
 
 type CreateDB struct {
-	*postgres.PGConnInfo
+	*Conn
 }
 
-func NewCreateDB(pgConnInfo *postgres.PGConnInfo) *CreateDB {
-	return &CreateDB{PGConnInfo: pgConnInfo}
+func NewCreateDB(pgConnInfo *Conn) *CreateDB {
+	return &CreateDB{Conn: pgConnInfo}
 }
 
 // Exec `createdb` for specified DB
 func (x *CreateDB) Exec() Result {
-	execFn := GenericExec(PGCreateDBCmd, x.PGConnInfo, x.ParseArgs)
+	execFn := GenericExec(PGCreateDBCmd, x.Conn, x.ParseArgs)
 	return execFn()
 }
 

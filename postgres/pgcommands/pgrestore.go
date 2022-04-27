@@ -2,7 +2,6 @@ package pgcommands
 
 import (
 	"fmt"
-	"github.com/mikel-at-tatari/tatari-dev-db/postgres"
 )
 
 var (
@@ -11,7 +10,7 @@ var (
 )
 
 type PGRestore struct {
-	*postgres.PGConnInfo
+	*Conn
 	// Verbose mode
 	Verbose bool
 	// File: Input file name
@@ -20,17 +19,17 @@ type PGRestore struct {
 	JobCount int
 }
 
-func NewPGRestore(pgConnInfo *postgres.PGConnInfo, file string) *PGRestore {
+func NewPGRestore(pgConnInfo *Conn, file string) *PGRestore {
 	return &PGRestore{
-		PGConnInfo: pgConnInfo,
-		File:       file,
+		Conn: pgConnInfo,
+		File: file,
 	}
 }
 
 // Exec `pg_restore` for specified DB
 func (x *PGRestore) Exec() Result {
 
-	execFn := GenericExec(PGRestoreCmd, x.PGConnInfo, x.ParseArgs)
+	execFn := GenericExec(PGRestoreCmd, x.Conn, x.ParseArgs)
 
 	return execFn()
 }

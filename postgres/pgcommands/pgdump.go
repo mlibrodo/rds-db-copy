@@ -2,7 +2,6 @@ package pgcommands
 
 import (
 	"fmt"
-	"github.com/mikel-at-tatari/tatari-dev-db/postgres"
 )
 
 var (
@@ -11,24 +10,24 @@ var (
 )
 
 type PGDump struct {
-	*postgres.PGConnInfo
+	*Conn
 	// Verbose mode
 	Verbose bool
 	// File: output file name
 	File string
 }
 
-func NewPGDump(pgConnInfo *postgres.PGConnInfo, file string) *PGDump {
+func NewPGDump(pgConnInfo *Conn, file string) *PGDump {
 	return &PGDump{
-		PGConnInfo: pgConnInfo,
-		File:       file,
+		Conn: pgConnInfo,
+		File: file,
 	}
 }
 
 // Exec `pg_dump` for specified DB
 func (x *PGDump) Exec() Result {
 
-	execFn := GenericExec(PGDumpCmd, x.PGConnInfo, x.ParseArgs)
+	execFn := GenericExec(PGDumpCmd, x.Conn, x.ParseArgs)
 
 	return execFn()
 }
