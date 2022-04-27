@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 )
 
-type CreateInstanceInput struct {
+type CreateInstance struct {
 	InstanceName       string
 	InstanceClass      string
 	SubnetGroupName    string
@@ -19,22 +19,22 @@ type CreateInstanceInput struct {
 	MasterPassword     string
 }
 
-func (c CreateInstanceInput) makeAWSCreateDBInstanceInput() *rds.CreateDBInstanceInput {
+func (ins *CreateInstance) makeAWSCreateDBInstanceInput() *rds.CreateDBInstanceInput {
 
 	engine := "postgres"
 	storageSize := int32(5)
 
 	return &rds.CreateDBInstanceInput{
 		AllocatedStorage:     aws.Int32(storageSize),
-		DBInstanceClass:      aws.String(c.InstanceClass),
-		DBInstanceIdentifier: aws.String(c.InstanceName),
+		DBInstanceClass:      aws.String(ins.InstanceClass),
+		DBInstanceIdentifier: aws.String(ins.InstanceName),
 		Engine:               aws.String(engine),
-		EngineVersion:        aws.String(c.EngineVersion),
-		DBSubnetGroupName:    aws.String(c.SubnetGroupName),
+		EngineVersion:        aws.String(ins.EngineVersion),
+		DBSubnetGroupName:    aws.String(ins.SubnetGroupName),
 		DeletionProtection:   aws.Bool(false),
-		PubliclyAccessible:   aws.Bool(c.PubliclyAccessible),
-		MasterUsername:       aws.String(c.MasterUser),
-		MasterUserPassword:   aws.String(c.MasterPassword),
+		PubliclyAccessible:   aws.Bool(ins.PubliclyAccessible),
+		MasterUsername:       aws.String(ins.MasterUser),
+		MasterUserPassword:   aws.String(ins.MasterPassword),
 	}
 }
 
@@ -43,11 +43,11 @@ type CreateInstanceOutput struct {
 	DBPort int32
 }
 
-func CreateInstance(in CreateInstanceInput) (*CreateInstanceOutput, error) {
+func (ins *CreateInstance) Exec() (*CreateInstanceOutput, error) {
 
 	svc := rds.NewFromConfig(*config.AWSConfig)
 
-	awsInput := in.makeAWSCreateDBInstanceInput()
+	awsInput := ins.makeAWSCreateDBInstanceInput()
 	dbInstance, err := svc.CreateDBInstance(context.TODO(), awsInput)
 
 	if err != nil {
