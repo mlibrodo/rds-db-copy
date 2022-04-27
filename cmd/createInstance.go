@@ -14,14 +14,16 @@ var createInstance = &cobra.Command{
 		subnetGroupName := "project-rds-copy-vpc-rds-subnet-group"
 		masterUser := "BtsY8qNqHx4xBb4r"
 		masterPassword := "q2vSeHgY9fg4G88X"
-		err, _ := rds.CreateInstance(rds.CreateInstanceInput{
+		createInstance := rds.CreateInstance{
 			InstanceName:    "UNCLAIMED",
 			InstanceClass:   "db.t2.micro",
 			SubnetGroupName: subnetGroupName,
 			EngineVersion:   "12.10",
 			MasterUser:      masterUser,
 			MasterPassword:  masterPassword,
-		})
+		}
+
+		err, _ := createInstance.Exec()
 
 		if err != nil {
 			panic(err)

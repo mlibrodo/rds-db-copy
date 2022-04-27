@@ -23,27 +23,25 @@ func (ins *CreateInstance) makeAWSCreateDBInstanceInput() *rds.CreateDBInstanceI
 
 	engine := "postgres"
 	storageSize := int32(5)
+	backupRentention := int32(0) // no backups
 
 	return &rds.CreateDBInstanceInput{
-		AllocatedStorage:     aws.Int32(storageSize),
-		DBInstanceClass:      aws.String(ins.InstanceClass),
-		DBInstanceIdentifier: aws.String(ins.InstanceName),
-		Engine:               aws.String(engine),
-		EngineVersion:        aws.String(ins.EngineVersion),
-		DBSubnetGroupName:    aws.String(ins.SubnetGroupName),
-		DeletionProtection:   aws.Bool(false),
-		PubliclyAccessible:   aws.Bool(ins.PubliclyAccessible),
-		MasterUsername:       aws.String(ins.MasterUser),
-		MasterUserPassword:   aws.String(ins.MasterPassword),
+		AllocatedStorage:          aws.Int32(storageSize),
+		BackupRetentionPeriod:     aws.Int32(backupRentention),
+		DBInstanceClass:           aws.String(ins.InstanceClass),
+		DBInstanceIdentifier:      aws.String(ins.InstanceName),
+		Engine:                    aws.String(engine),
+		EngineVersion:             aws.String(ins.EngineVersion),
+		DBSubnetGroupName:         aws.String(ins.SubnetGroupName),
+		DeletionProtection:        aws.Bool(false),
+		PubliclyAccessible:        aws.Bool(ins.PubliclyAccessible),
+		EnablePerformanceInsights: aws.Bool(false),
+		MasterUsername:            aws.String(ins.MasterUser),
+		MasterUserPassword:        aws.String(ins.MasterPassword),
 	}
 }
 
-type CreateInstanceOutput struct {
-	DBHost string
-	DBPort int32
-}
-
-func (ins *CreateInstance) Exec() (*CreateInstanceOutput, error) {
+func (ins *CreateInstance) Exec() (*RDSInstanceDescriptor, error) {
 
 	svc := rds.NewFromConfig(*config.AWSConfig)
 
@@ -56,11 +54,26 @@ func (ins *CreateInstance) Exec() (*CreateInstanceOutput, error) {
 	}
 
 	db := dbInstance.DBInstance
-	log.WithFields(log.Fields{
-		"DBHost": db.Endpoint.Address,
-		"DBPort": db.Endpoint.Port,
-	}).Info("Instance Created")
 
-	out := CreateInstanceOutput{DBHost: *db.Endpoint.Address, DBPort: db.Endpoint.Port}
+	var host string
+	var port int32
+	if db.Endpoint != nil {
+		host = *db.Endpoint.Address
+		port = db.Endpoint.Port
+	}
+
+	log.WithFields(log.Fields{
+		"DBHost":        host,
+		"DBPort":        port,
+		"DBInstanceId":  db.DBInstanceIdentifier,
+		"DBInstanceARN": db.DBInstanceArn,
+	}).Info("RDSInstanceDescriptor Created")
+
+	out := RDSInstanceDescriptor{
+		DBHost:        host,
+		DBPort:        port,
+		DBInstanceId:  db.DBInstanceIdentifier,
+		DBInstanceARN: db.DBInstanceArn,
+	}
 	return &out, nil
 }
