@@ -89,7 +89,7 @@ func (rdsDB *RDSDB) waitTilDBAcceptConnections(info conn.PGConnInfo) error {
 		if result.Error == nil {
 			return nil
 		}
-		//time.Sleep()
+		time.Sleep(10 * time.Second)
 
 	}
 
