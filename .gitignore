@@ -1,2 +1,7 @@
 bin
 vendor
+
+
+# IDEs
+# IntelliJ
+/.idea/*
