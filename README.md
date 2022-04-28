@@ -16,3 +16,7 @@ $ ./bin/tatari-dev-db
 ### Testing
 
 ``make test``
+
+### TODO
+1) make sure docker file has pg_tools
+2) Make sure security group assigned in VPC subnets are able to access PG port
