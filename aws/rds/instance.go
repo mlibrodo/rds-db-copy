@@ -5,4 +5,5 @@ type RDSInstanceDescriptor struct {
 	DBPort        int32
 	DBInstanceId  *string
 	DBInstanceARN *string
+	DBIResourceId *string
 }

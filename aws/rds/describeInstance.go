@@ -26,6 +26,7 @@ func DescribeInstance(instanceId *string) (*RDSInstanceDescriptor, error) {
 			DBPort:        out.DBInstances[0].Endpoint.Port,
 			DBInstanceId:  out.DBInstances[0].DBInstanceIdentifier,
 			DBInstanceARN: out.DBInstances[0].DBInstanceArn,
+			DBIResourceId: out.DBInstances[0].DbiResourceId,
 		}
 
 		return &descriptor, nil

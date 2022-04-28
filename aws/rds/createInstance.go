@@ -26,18 +26,19 @@ func (ins *CreateInstance) makeAWSCreateDBInstanceInput() *rds.CreateDBInstanceI
 	backupRentention := int32(0) // no backups
 
 	return &rds.CreateDBInstanceInput{
-		AllocatedStorage:          aws.Int32(storageSize),
-		BackupRetentionPeriod:     aws.Int32(backupRentention),
-		DBInstanceClass:           aws.String(ins.InstanceClass),
-		DBInstanceIdentifier:      aws.String(ins.InstanceName),
-		Engine:                    aws.String(engine),
-		EngineVersion:             aws.String(ins.EngineVersion),
-		DBSubnetGroupName:         aws.String(ins.SubnetGroupName),
-		DeletionProtection:        aws.Bool(false),
-		PubliclyAccessible:        aws.Bool(ins.PubliclyAccessible),
-		EnablePerformanceInsights: aws.Bool(false),
-		MasterUsername:            aws.String(ins.MasterUser),
-		MasterUserPassword:        aws.String(ins.MasterPassword),
+		AllocatedStorage:                aws.Int32(storageSize),
+		BackupRetentionPeriod:           aws.Int32(backupRentention),
+		DBInstanceClass:                 aws.String(ins.InstanceClass),
+		DBInstanceIdentifier:            aws.String(ins.InstanceName),
+		Engine:                          aws.String(engine),
+		EngineVersion:                   aws.String(ins.EngineVersion),
+		DBSubnetGroupName:               aws.String(ins.SubnetGroupName),
+		DeletionProtection:              aws.Bool(false),
+		PubliclyAccessible:              aws.Bool(ins.PubliclyAccessible),
+		EnablePerformanceInsights:       aws.Bool(false),
+		MasterUsername:                  aws.String(ins.MasterUser),
+		MasterUserPassword:              aws.String(ins.MasterPassword),
+		EnableIAMDatabaseAuthentication: aws.Bool(true),
 	}
 }
 
@@ -74,6 +75,7 @@ func (ins *CreateInstance) Exec() (*RDSInstanceDescriptor, error) {
 		DBPort:        port,
 		DBInstanceId:  db.DBInstanceIdentifier,
 		DBInstanceARN: db.DBInstanceArn,
+		DBIResourceId: db.DbiResourceId,
 	}
 	return &out, nil
 }
