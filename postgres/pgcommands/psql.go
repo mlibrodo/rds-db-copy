@@ -30,6 +30,13 @@ func (x *PSQLQuery) ParseArgs() []string {
 		args = append(args, *y)
 	}
 
+	if y := x.UsernameAsCmdArg(); y != nil {
+		args = append(args, *y)
+	}
+	if y := x.DBNameAsCmdArg(nil); y != nil {
+		args = append(args, *y)
+	}
+
 	args = append(args, fmt.Sprintf("--command=%s", x.Query))
 
 	return args

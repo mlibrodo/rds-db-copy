@@ -10,13 +10,18 @@ import (
 )
 
 type CreateInstance struct {
-	InstanceName       string
+	DBInstanceID       string
 	InstanceClass      string
 	SubnetGroupName    string
 	PubliclyAccessible bool
 	EngineVersion      string
-	MasterUser         string
-	MasterPassword     string
+	// MasterUser is the initial user to bootstrap the PG RDS instance.
+	// Only alphanumeric usernames are allowed.
+	// For more information visit: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.MasterAccounts.html
+	// TODO check for alphanumeric master username
+	MasterUser string
+	// MasterPassword password for the MasterUser
+	MasterPassword string
 }
 
 func (ins *CreateInstance) makeAWSCreateDBInstanceInput() *rds.CreateDBInstanceInput {
@@ -29,7 +34,7 @@ func (ins *CreateInstance) makeAWSCreateDBInstanceInput() *rds.CreateDBInstanceI
 		AllocatedStorage:                aws.Int32(storageSize),
 		BackupRetentionPeriod:           aws.Int32(backupRentention),
 		DBInstanceClass:                 aws.String(ins.InstanceClass),
-		DBInstanceIdentifier:            aws.String(ins.InstanceName),
+		DBInstanceIdentifier:            aws.String(ins.DBInstanceID),
 		Engine:                          aws.String(engine),
 		EngineVersion:                   aws.String(ins.EngineVersion),
 		DBSubnetGroupName:               aws.String(ins.SubnetGroupName),
@@ -66,8 +71,8 @@ func (ins *CreateInstance) Exec() (*RDSInstanceDescriptor, error) {
 	log.WithFields(log.Fields{
 		"DBHost":        host,
 		"DBPort":        port,
-		"DBInstanceId":  db.DBInstanceIdentifier,
-		"DBInstanceARN": db.DBInstanceArn,
+		"DBInstanceId":  *db.DBInstanceIdentifier,
+		"DBInstanceARN": *db.DBInstanceArn,
 	}).Info("RDSInstanceDescriptor Created")
 
 	out := RDSInstanceDescriptor{

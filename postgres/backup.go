@@ -11,28 +11,44 @@ import (
 )
 
 type BackupToS3 struct {
-	PGConnInfo *conn.PGConnInfo
+	DB *conn.PGConnInfo
 }
 
 func (in BackupToS3) Exec(S3 s3.S3Object) error {
-	f, err := backup(in.PGConnInfo)
+	db := in.DB
+	backupFile, err := backup(db)
 
 	if err != nil {
 		return err
 	}
 
-	return s3.Upload(S3, f)
+	if err = s3.Upload(S3, backupFile); err != nil {
+		return err
+	}
+
+	log.WithFields(
+		log.Fields{
+			"Host":        db.DBHost,
+			"Port":        db.DBPort,
+			"DB":          db.DBName,
+			"Backup File": backupFile,
+			"S3 Bucket":   S3.Bucket,
+			"S3 Key":      S3.Key,
+		},
+	).Debug("Backup success")
+
+	return nil
 }
 
-func backup(pgConnInfo *conn.PGConnInfo) (*string, error) {
-	filePattern := fmt.Sprintf(`%v_%v-*.sql.tar.gz`, pgConnInfo.DBName, time.Now().Unix())
+func backup(db *conn.PGConnInfo) (*string, error) {
+	filePattern := fmt.Sprintf(`%v_%v-*.sql.tar.gz`, db.DBName, time.Now().Unix())
 	tempFile, err := os.CreateTemp(pgcommands.TEMP_DIR, filePattern)
 
 	if err != nil {
 		return nil, err
 	}
 
-	dump := pgcommands.NewPGDump(&pgcommands.Conn{pgConnInfo}, tempFile.Name())
+	dump := pgcommands.NewPGDump(&pgcommands.Conn{db}, tempFile.Name())
 	dump.Verbose = true
 
 	dumpExec := dump.Exec()
@@ -54,8 +70,7 @@ func backup(pgConnInfo *conn.PGConnInfo) (*string, error) {
 
 	log.WithFields(
 		log.Fields{
-			"FullPath": fullPath,
-			"Command":  dumpExec.FullCommand,
+			"PGDump Flags": dumpExec.FullCommand,
 		},
 	).Debug("Backup success")
 
