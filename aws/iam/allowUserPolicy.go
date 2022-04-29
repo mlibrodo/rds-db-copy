@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
-	"github.com/mikel-at-tatari/tatari-dev-db/aws/config"
+	"github.com/mlibrodo/rds-db-copy/aws/config"
 	"io"
 	"regexp"
 	"strings"

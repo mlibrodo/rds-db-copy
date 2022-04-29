@@ -1,13 +1,11 @@
 package main
 
 import (
-	
-	"github.com/mikel-at-tatari/tatari-dev-db/cmd"
+	"github.com/mlibrodo/rds-db-copy/cmd"
 )
 
 func main() {
 
-    
-    cmd.Execute()
-	
+	cmd.Execute()
+
 }

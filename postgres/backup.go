@@ -2,10 +2,10 @@ package postgres
 
 import (
 	"fmt"
-	"github.com/mikel-at-tatari/tatari-dev-db/aws/s3"
-	"github.com/mikel-at-tatari/tatari-dev-db/log"
-	"github.com/mikel-at-tatari/tatari-dev-db/postgres/conn"
-	"github.com/mikel-at-tatari/tatari-dev-db/postgres/pgcommands"
+	"github.com/mlibrodo/rds-db-copy/aws/s3"
+	"github.com/mlibrodo/rds-db-copy/log"
+	"github.com/mlibrodo/rds-db-copy/postgres/conn"
+	"github.com/mlibrodo/rds-db-copy/postgres/pgcommands"
 	"os"
 	"time"
 )

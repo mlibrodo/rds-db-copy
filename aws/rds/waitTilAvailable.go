@@ -3,7 +3,7 @@ package rds
 import (
 	"context"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
-	"github.com/mikel-at-tatari/tatari-dev-db/aws/config"
+	"github.com/mlibrodo/rds-db-copy/aws/config"
 	"time"
 )
 

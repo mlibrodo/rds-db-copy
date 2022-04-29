@@ -2,7 +2,7 @@
 
 ## Development Lead
 
-- Michael Librodo [mikel-at-tatari](https://github.com/mikel-at-tatari)
+- Michael Librodo [mlibrodo](https://github.com/mlibrodo)
 
 ## Contributors
 

@@ -5,8 +5,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/mikel-at-tatari/tatari-dev-db/aws/config"
-	"github.com/mikel-at-tatari/tatari-dev-db/log"
+	"github.com/mlibrodo/rds-db-copy/aws/config"
+	"github.com/mlibrodo/rds-db-copy/log"
 	"os"
 )
 

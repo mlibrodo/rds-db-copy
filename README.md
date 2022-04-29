@@ -1,4 +1,4 @@
-# tatari-dev-db
+# rds-db-copy
 
 A Golang project.
 
@@ -10,7 +10,7 @@ Running it then should be as simple as:
 
 ```console
 $ make
-$ ./bin/tatari-dev-db
+$ ./bin/rds-db-copy
 ```
 
 ### Testing

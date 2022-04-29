@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/mikel-at-tatari/tatari-dev-db/aws/rds"
+	"github.com/mlibrodo/rds-db-copy/aws/rds"
 	"github.com/spf13/cobra"
 )
 

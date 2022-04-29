@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/mikel-at-tatari/tatari-dev-db/version"
+	"github.com/mlibrodo/rds-db-copy/version"
 	"github.com/spf13/cobra"
 )
 

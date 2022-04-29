@@ -8,7 +8,7 @@ You can contribute in many ways:
 
 ### Report Bugs
 
-Report bugs at https://github.com/mikel-at-tatari/tatari-dev-db/issues.
+Report bugs at https://github.com/mlibrodo/rds-db-copy/issues.
 
 If you are reporting a bug, please include:
 
@@ -28,13 +28,13 @@ is open to whoever wants to implement it.
 
 ### Write Documentation
 
-tatari-dev-db could always use more documentation, whether as part of the
-official tatari-dev-db docs, in docstrings, or even on the web in blog posts,
+rds-db-copy could always use more documentation, whether as part of the
+official rds-db-copy docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
 ### Submit Feedback
 
-The best way to send feedback is to file an issue at https://github.com/mikel-at-tatari/tatari-dev-db/issues.
+The best way to send feedback is to file an issue at https://github.com/mlibrodo/rds-db-copy/issues.
 
 If you are proposing a feature:
 
@@ -45,12 +45,12 @@ If you are proposing a feature:
 
 ## Get Started!
 
-Ready to contribute? Here's how to set up `tatari-dev-db` for local development.
+Ready to contribute? Here's how to set up `rds-db-copy` for local development.
 
-1. Fork the `tatari-dev-db` repo on GitHub.
+1. Fork the `rds-db-copy` repo on GitHub.
 2. Clone your fork locally::
 ```bash
-    $ git clone git@github.com:your_name_here/tatari-dev-db.git
+    $ git clone git@github.com:your_name_here/rds-db-copy.git
 ```
 3. Create a branch for local development::
 ```bash

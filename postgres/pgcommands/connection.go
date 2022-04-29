@@ -2,7 +2,7 @@ package pgcommands
 
 import (
 	"fmt"
-	"github.com/mikel-at-tatari/tatari-dev-db/postgres/conn"
+	"github.com/mlibrodo/rds-db-copy/postgres/conn"
 )
 
 type Conn struct {

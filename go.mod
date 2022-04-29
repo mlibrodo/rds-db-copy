@@ -1,4 +1,4 @@
-module github.com/mikel-at-tatari/tatari-dev-db
+module github.com/mlibrodo/rds-db-copy
 
 go 1.18
 

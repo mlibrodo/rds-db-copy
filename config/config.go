@@ -40,7 +40,7 @@ func LoadConfigProvider(appName string) Provider {
 }
 
 func init() {
-	defaultConfig = readViperConfig("TATARI-DEV-DB")
+	defaultConfig = readViperConfig("rds-db-copy")
 }
 
 func readViperConfig(appName string) *viper.Viper {
@@ -49,10 +49,9 @@ func readViperConfig(appName string) *viper.Viper {
 	v.AutomaticEnv()
 
 	// global defaults
-	
+
 	v.SetDefault("json_logs", false)
 	v.SetDefault("loglevel", "debug")
-	
 
 	return v
 }
