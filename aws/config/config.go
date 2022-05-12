@@ -8,10 +8,18 @@ import (
 
 var AWSConfig *aws.Config
 
+const config_profile = "personal"
+
 func init() {
 
-	cfg, err := config.LoadDefaultConfig(context.TODO(),
-		config.WithSharedConfigProfile("personal"))
+	var cfg aws.Config
+	var err error
+	if config_profile != "" {
+		cfg, err = config.LoadDefaultConfig(context.TODO(),
+			config.WithSharedConfigProfile(config_profile))
+	} else {
+		cfg, err = config.LoadDefaultConfig(context.TODO())
+	}
 
 	if err != nil {
 		panic(err)

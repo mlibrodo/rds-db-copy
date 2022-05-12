@@ -39,24 +39,19 @@ type Logger interface {
 var defaultLogger *logrus.Logger
 
 func init() {
-	defaultLogger = newLogrusLogger(config.Config())
+	defaultLogger = newLogrusLogger(config.GetConfig().Logging)
 }
 
-// NewLogger returns a configured logrus instance
-func NewLogger(cfg config.Provider) *logrus.Logger {
-	return newLogrusLogger(cfg)
-}
-
-func newLogrusLogger(cfg config.Provider) *logrus.Logger {
+func newLogrusLogger(cfg config.LoggingConfig) *logrus.Logger {
 
 	l := logrus.New()
 
-	if cfg.GetBool("json_logs") {
+	if cfg.JSONLog {
 		l.Formatter = new(logrus.JSONFormatter)
 	}
 	l.Out = os.Stderr
 
-	switch cfg.GetString("loglevel") {
+	switch cfg.Level {
 	case "debug":
 		l.Level = logrus.DebugLevel
 	case "warning":

@@ -1,0 +1,14 @@
+[logging]
+level = 'debug'
+jsonLogs = false
+
+[server]
+port = 8080
+
+[aws]
+serviceConfigProfile = ''
+
+[aws.rds]
+masterUsername = 'xxx'
+masterPassword = ''
+
