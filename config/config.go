@@ -1,13 +1,31 @@
 package config
 
 type Config struct {
-	Logging LoggingConfig `mapstructure:"logging"`
-	AWS     AWSConfig     `mapstructure:"aws"`
-	Server  ServerConfig  `mapstructure:"server"`
+	Logging    LoggingConfig `mapstructure:"logging"`
+	AWS        AWSConfig     `mapstructure:"aws"`
+	Server     ServerConfig  `mapstructure:"server"`
+	Backup     BackupConfig  `mapstructure:"backup"`
+	DBRegistry DBRegistry    `mapstructure:"dbregistry,squash"`
+}
+
+type BackupConfig struct {
+	S3Bucket string `mapstructure:"s3_bucket"`
+}
+
+type DBRegistry struct {
+	DBs []DB `mapstructure:"databases"`
+}
+
+type DB struct {
+	Host       string `mapstructure:"host"`
+	Port       int32  `mapstructure:"port"`
+	DBName     string `mapstructure:"dbName"`
+	DBUser     string `mapstructure:"user"`
+	DBPassword string `mapstructure:"password"`
 }
 
 type ServerConfig struct {
-	Port int `mapstructure:"port"`
+	BindAddress string `mapstructure:"bindAddress"`
 }
 
 type AWSConfig struct {

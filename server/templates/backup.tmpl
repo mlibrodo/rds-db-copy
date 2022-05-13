@@ -1,0 +1,19 @@
+<html lang="">
+<head>
+    <title></title>
+</head>
+<body>
+Backup DB to S3
+
+<form action="/backup" method="POST">
+    <label for="db">DB</label><br>
+    <select id="db" name="dbOption">
+        {{range $db := .DBOptions}}
+        <option value="{{$db}}">{{$db}}</option>
+        {{end}}
+    </select>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>

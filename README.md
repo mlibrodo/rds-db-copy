@@ -18,6 +18,11 @@ TODO: Elaborate on what infrastructure requirements
 1) RDS subnet group name is created and correct ports for PG are configured in the security groups
 2) Backup bucket for pgdumps
 
+### Overriding via Environment Variables
+To override the default configuration from the [default_config.toml](config/default_config.toml) use a `.` for nested values
+i.e. override `server->port` set the `SERVER.PORT` environment variable 
+
+
 ### Logging into your assigned instance
 1) Make sure to download the SSL certificates `global-bundle.pem`
    https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html

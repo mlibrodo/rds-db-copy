@@ -8,10 +8,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var restoreCmd = &cobra.Command{
-	Use:   "restore",
-	Short: "Restore a backup in S3 to RDS",
-	Long:  `Restore an S3 backup to a newly created RDS Postgres instance`,
+var launchCmd = &cobra.Command{
+	Use:   "launch",
+	Short: "Launch a backup in S3 to RDS",
+	Long:  `Launch an S3 backup to a newly created RDS Postgres instance`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// TODO figure out how to use VIPER with cobra to set these either as func param or ENV var
 		subnetGroupName := "project-rds-copy-vpc-rds-subnet-group"
@@ -47,5 +47,5 @@ var restoreCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(restoreCmd)
+	rootCmd.AddCommand(launchCmd)
 }

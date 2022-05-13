@@ -3,7 +3,7 @@ level = 'debug'
 jsonLogs = false
 
 [server]
-port = 8080
+bindAddress = '127.0.0.1:8081'
 
 [aws]
 serviceConfigProfile = ''
@@ -11,4 +11,25 @@ serviceConfigProfile = ''
 [aws.rds]
 masterUsername = 'xxx'
 masterPassword = ''
+
+[backup]
+s3_bucket = "librodo-db-backups"
+
+[dbregistry]
+[[databases]]
+dbName = "source_db"
+host = "localhost"
+port = 5432
+user="miketatari"
+password=""
+
+[[databases]]
+dbName = "another_source_db"
+host = "localhost"
+port = 5432
+user="miketatari"
+password=""
+
+
+
 

@@ -68,3 +68,38 @@ func Upload(s3Object S3Object, f *string) error {
 
 	return nil
 }
+
+func List(bucket *string, prefix *string) ([]string, error) {
+	svc := s3.NewFromConfig(*config.AWSConfig)
+
+	files := make([]string, 0)
+
+	notDone := false
+
+	var out *s3.ListObjectsV2Output
+	var err error
+	var continuationToken *string
+
+	for notDone {
+		in := &s3.ListObjectsV2Input{
+			Bucket:            bucket,
+			Prefix:            prefix,
+			ContinuationToken: continuationToken,
+		}
+
+		if out, err = svc.ListObjectsV2(context.TODO(), in); err != nil {
+			return nil, err
+		}
+
+		for _, obj := range out.Contents {
+			files = append(files, *obj.Key)
+		}
+		if out.ContinuationToken != nil {
+			continuationToken = out.ContinuationToken
+		} else {
+			notDone = false
+		}
+
+	}
+	return files, nil
+}

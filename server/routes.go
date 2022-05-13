@@ -7,18 +7,25 @@ import (
 )
 
 func addRoutes(engine *gin.Engine) {
-	engine.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
+	engine.GET("/version", func(c *gin.Context) {
+		handlers.Version(c)
 	})
 
-	engine.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl", nil)
-
+	engine.GET("/assign", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "assign.tmpl", nil)
 	})
-
 	engine.POST("/assign", func(c *gin.Context) {
 		handlers.Assign(c)
+	})
+
+	engine.POST("/launch", func(c *gin.Context) {
+		handlers.PostLaunch(c)
+	})
+
+	engine.GET("/backup", func(c *gin.Context) {
+		handlers.GetBackupDBForm(c)
+	})
+	engine.POST("/backup", func(c *gin.Context) {
+		handlers.PostBackupDB(c)
 	})
 }

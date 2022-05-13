@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type AssignDBForm struct {
+type RestoreDBForm struct {
 	IAMUser       string `form:"iamUser"`
 	RDSInstanceId string `form:"rdsInstanceId"`
 	DBName        string `form:"dbName"`
@@ -14,8 +14,8 @@ type AssignDBForm struct {
 	AWSAccountID  string `form:"awsAccountId"`
 }
 
-func Assign(c *gin.Context) {
-	var req AssignDBForm
+func PostLaunch(c *gin.Context) {
+	var req RestoreDBForm
 
 	if c.ShouldBind(&req) == nil {
 		log.Print(req)

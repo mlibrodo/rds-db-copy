@@ -8,8 +8,8 @@ import (
 // versionCmd represents the version command
 var runServerCmd = &cobra.Command{
 	Use:   "runserver",
-	Short: "Run the server",
-	Long:  `Run the Server`,
+	Short: "Run an interactive webserver",
+	Long:  `Run an interactive webserver for managing RDS development DBs`,
 	Run: func(cmd *cobra.Command, args []string) {
 		server.Start()
 	},

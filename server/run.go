@@ -3,6 +3,7 @@ package server
 import (
 	"embed"
 	"github.com/gin-gonic/gin"
+	"github.com/mlibrodo/rds-db-copy/config"
 	"html/template"
 )
 
@@ -19,5 +20,5 @@ func Start() {
 	templates = template.Must(template.ParseFS(templateFS, "templates/*.tmpl"))
 	engine.SetHTMLTemplate(templates)
 
-	engine.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	engine.Run(config.GetConfig().Server.BindAddress)
 }
