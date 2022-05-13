@@ -17,7 +17,7 @@ type BackupDBForm struct {
 	DBOption string `form:"dbOption"`
 }
 
-func PostBackupDB(c *gin.Context) {
+func POSTBackupDB(c *gin.Context) {
 	var req BackupDBForm
 
 	if c.ShouldBind(&req) == nil {
@@ -50,7 +50,7 @@ func PostBackupDB(c *gin.Context) {
 
 		backup := postgres.BackupToS3{DB: db}
 		if err := backup.Exec(s3Obj); err == nil {
-			GetBackupDBForm(c)
+			GETBackupDBForm(c)
 		} else {
 			log.Error("Unable to backup to s3")
 			c.Status(400)
@@ -62,7 +62,7 @@ func PostBackupDB(c *gin.Context) {
 
 }
 
-func GetBackupDBForm(c *gin.Context) {
+func GETBackupDBForm(c *gin.Context) {
 
 	dbs := config.GetConfig().DBRegistry.DBs
 

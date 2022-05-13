@@ -14,7 +14,7 @@ type RestoreDBForm struct {
 	AWSAccountID  string `form:"awsAccountId"`
 }
 
-func PostLaunch(c *gin.Context) {
+func POSTLaunch(c *gin.Context) {
 	var req RestoreDBForm
 
 	if c.ShouldBind(&req) == nil {

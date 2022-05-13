@@ -8,24 +8,24 @@ import (
 
 func addRoutes(engine *gin.Engine) {
 	engine.GET("/version", func(c *gin.Context) {
-		handlers.Version(c)
+		handlers.GETVersion(c)
 	})
 
 	engine.GET("/assign", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "assign.tmpl", nil)
 	})
 	engine.POST("/assign", func(c *gin.Context) {
-		handlers.Assign(c)
+		handlers.POSTAssign(c)
 	})
 
 	engine.POST("/launch", func(c *gin.Context) {
-		handlers.PostLaunch(c)
+		handlers.POSTLaunch(c)
 	})
 
 	engine.GET("/backup", func(c *gin.Context) {
-		handlers.GetBackupDBForm(c)
+		handlers.GETBackupDBForm(c)
 	})
 	engine.POST("/backup", func(c *gin.Context) {
-		handlers.PostBackupDB(c)
+		handlers.POSTBackupDB(c)
 	})
 }

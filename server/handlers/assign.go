@@ -14,7 +14,7 @@ type AssignDBForm struct {
 	AWSAccountID  string `form:"awsAccountId"`
 }
 
-func Assign(c *gin.Context) {
+func POSTAssign(c *gin.Context) {
 	var req AssignDBForm
 
 	if c.ShouldBind(&req) == nil {

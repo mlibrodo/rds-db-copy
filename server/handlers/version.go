@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func Version(c *gin.Context) {
+func GETVersion(c *gin.Context) {
 
 	c.JSON(
 		http.StatusOK,
