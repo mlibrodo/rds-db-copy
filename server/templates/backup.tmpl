@@ -6,12 +6,14 @@
 Backup DB to S3
 
 <form action="/backup" method="POST">
-    <label for="db">DB</label><br>
-    <select id="db" name="dbOption">
+    <label for="db">DB</label>
+    <br/>
+    <select id="db" name="db">
         {{range $db := .DBOptions}}
-        <option value="{{$db}}">{{$db}}</option>
+        <option value="{{$db.Value}}">{{$db.Name}}</option>
         {{end}}
     </select>
+    <br/>
     <input type="submit" value="Submit">
 </form>
 

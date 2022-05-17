@@ -1,0 +1,29 @@
+<html lang="">
+<head>
+    <title></title>
+</head>
+<body>
+Restore To Instance
+
+<form action="/restore" method="POST">
+    <label for="rdsInstance">Instance</label>
+    <br/>
+    <select id="rdsInstance" name="rdsInstance">
+        {{range $inst := .InstanceOptions}}
+        <option value="{{$inst.Value}}">{{$inst.Name}}</option>
+        {{end}}
+    </select>
+    <br/>
+    <label for="s3Backup">Backup</label>
+    <br/>
+    <select id="s3Backup" name="s3Backup">
+        {{range $backup := .BackupOptions}}
+        <option value="{{$backup.Value}}">{{$backup.Name}}</option>
+        {{end}}
+    </select>
+    <br/>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>

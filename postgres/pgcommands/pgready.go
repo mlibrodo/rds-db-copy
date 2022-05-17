@@ -12,7 +12,7 @@ type IsReady struct {
 }
 
 func (x *IsReady) Exec() Result {
-	execFn := GenericExec(PGIsReadyCmd, x.Conn, x.ParseArgs)
+	execFn := PGCLIExecutor(PGIsReadyCmd, x.Conn, x.ParseArgs)
 
 	return execFn()
 

@@ -1,0 +1,47 @@
+<html lang="">
+<head>
+    <title></title>
+</head>
+<body>
+Create Instance
+
+<form action="/createInstance" method="POST">
+    <label for="instanceClass">Instance Class</label>
+    <br>
+    <select id="instanceClass" name="instanceClass">
+        {{range $i := .InstanceClassOptions}}
+        <option value="{{$i.Value}}">{{$i.Name}}</option>
+        {{end}}
+    </select>
+
+    <br>
+    <label for="subnetGroup">Subnet Groups</label>
+    <br>
+    <select id="subnetGroup" name="subnetGroup">
+        {{range $s := .SubnetGroupOptions}}
+        <option value="{{$s.Value}}">{{$s.Name}}</option>
+        {{end}}
+    </select>
+    <br>
+    <label for="engineVersion">Engine Version</label>
+    <br>
+    <select id="engineVersion" name="engineVersion">
+        {{range $e := .EngineVersionOptions}}
+        <option value="{{$e.Value}}">{{$e.Name}}</option>
+        {{end}}
+    </select>
+
+    <br>
+    <label for="storageSize">Storage Size</label>
+    <br>
+    <select id="storageSize" name="storageSize">
+        {{range $s := .StorageSizeOptions}}
+        <option value="{{$s.Value}}">{{$s.Name}}</option>
+        {{end}}
+    </select>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>

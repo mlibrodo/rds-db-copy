@@ -16,9 +16,8 @@ type AssignDBToUserPolicy struct {
 	AccountID     string
 	DbiResourceId string
 	DBUserName    string
-
-	AWSUser      string
-	DBInstanceID string
+	AWSUser       string
+	DBInstanceID  string
 }
 
 func (t *AssignDBToUserPolicy) createPolicy(out io.Writer) error {

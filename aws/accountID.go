@@ -1,8 +1,9 @@
 package aws
 
+import "github.com/mlibrodo/rds-db-copy/config"
+
 var AWSAccountId string
 
 func init() {
-	// TODO inject somehow, maybe envvar
-	AWSAccountId = "283492314377"
+	AWSAccountId = config.GetConfig().AWS.AccountId
 }

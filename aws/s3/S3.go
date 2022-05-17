@@ -72,9 +72,9 @@ func Upload(s3Object S3Object, f *string) error {
 func List(bucket *string, prefix *string) ([]string, error) {
 	svc := s3.NewFromConfig(*config.AWSConfig)
 
-	files := make([]string, 0)
+	var files []string
 
-	notDone := false
+	notDone := true
 
 	var out *s3.ListObjectsV2Output
 	var err error

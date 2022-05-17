@@ -29,7 +29,7 @@ func NewPGRestore(pgConnInfo *Conn, file string) *PGRestore {
 // Exec `pg_restore` for specified DB
 func (x *PGRestore) Exec() Result {
 
-	execFn := GenericExec(PGRestoreCmd, x.Conn, x.ParseArgs)
+	execFn := PGCLIExecutor(PGRestoreCmd, x.Conn, x.ParseArgs)
 
 	return execFn()
 }

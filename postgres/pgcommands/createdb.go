@@ -15,7 +15,7 @@ func NewCreateDB(pgConnInfo *Conn) *CreateDB {
 
 // Exec `createdb` for specified DB
 func (x *CreateDB) Exec() Result {
-	execFn := GenericExec(PGCreateDBCmd, x.Conn, x.ParseArgs)
+	execFn := PGCLIExecutor(PGCreateDBCmd, x.Conn, x.ParseArgs)
 	return execFn()
 }
 

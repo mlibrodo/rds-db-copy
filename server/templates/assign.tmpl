@@ -6,16 +6,24 @@
 Assign DB to User
 
 <form action="/assign" method="POST">
-    <label for="iamUser">IAM User</label><br>
-    <input type="text" id="iamUser" name="iamUser"><br>
-    <label for="rdsInstanceId">DB Instance ID</label><br>
-    <input type="text" id="rdsInstanceId" name="rdsInstanceId"><br><br>
-    <label for="dbName">DB Name</label><br>
-    <input type="text" id="dbName" name="dbName"><br><br>
-    <label for="rdsRegion">RDS Region</label><br>
-    <input type="text" id="rdsRegion" name="rdsRegion"><br><br>
-    <label for="awsAccountId">AWS Account ID</label><br>
-    <input type="text" id="awsAccountId" name="awsAccountId"><br><br>
+    <label for="iamUser">IAM User</label>
+    <br>
+    <input type="text" id="iamUser" name="iamUser">
+    <br>
+    <label for="dbCopyId">Copy To Assign</label>
+    <br>
+    <select id="dbCopyId" name="dbCopyId">
+        {{range $db := .DBCopies}}
+        <option value="{{$db.Value}}">{{$db.Name}}</option>
+        {{end}}
+    </select>
+    <br>
+<!--    <label for="dbName">DB Name</label><br>-->
+<!--    <input type="text" id="dbName" name="dbName"><br><br>-->
+<!--    <label for="rdsRegion">RDS Region</label><br>-->
+<!--    <input type="text" id="rdsRegion" name="rdsRegion"><br><br>-->
+<!--    <label for="awsAccountId">AWS Account ID</label><br>-->
+<!--    <input type="text" id="awsAccountId" name="awsAccountId"><br><br>-->
     <input type="submit" value="Submit">
 </form>
 

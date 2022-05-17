@@ -13,7 +13,7 @@ type PSQLQuery struct {
 }
 
 func (x *PSQLQuery) Exec() Result {
-	execFn := GenericExec(PSQLCmd, x.Conn, x.ParseArgs)
+	execFn := PGCLIExecutor(PSQLCmd, x.Conn, x.ParseArgs)
 
 	return execFn()
 

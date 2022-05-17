@@ -24,13 +24,16 @@ func DescribeInstance(instanceId *string) (*RDSInstanceDescriptor, error) {
 		descriptor := RDSInstanceDescriptor{
 			DBHost:        *out.DBInstances[0].Endpoint.Address,
 			DBPort:        out.DBInstances[0].Endpoint.Port,
-			DBInstanceId:  out.DBInstances[0].DBInstanceIdentifier,
-			DBInstanceARN: out.DBInstances[0].DBInstanceArn,
-			DBIResourceId: out.DBInstances[0].DbiResourceId,
+			DBInstanceId:  *out.DBInstances[0].DBInstanceIdentifier,
+			DBInstanceARN: *out.DBInstances[0].DBInstanceArn,
+			DBIResourceId: *out.DBInstances[0].DbiResourceId,
+			Engine:        *out.DBInstances[0].Engine,
+			EngineVersion: *out.DBInstances[0].EngineVersion,
+			InstanceClass: *out.DBInstances[0].DBInstanceClass,
+			Status:        *out.DBInstances[0].DBInstanceStatus,
 		}
 
 		return &descriptor, nil
-
 	}
 
 }

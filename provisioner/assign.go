@@ -1,9 +1,14 @@
 package provisioner
 
 import (
+	"context"
 	"fmt"
-	"github.com/mlibrodo/rds-db-copy/aws"
-	"github.com/mlibrodo/rds-db-copy/aws/config"
+	"github.com/aws/aws-sdk-go/aws/arn"
+	"github.com/georgysavva/scany/pgxscan"
+	"github.com/jackc/pgx/v4"
+	"github.com/mlibrodo/rds-db-copy/config"
+	"time"
+
 	"github.com/mlibrodo/rds-db-copy/aws/iam"
 	"github.com/mlibrodo/rds-db-copy/aws/rds"
 	"github.com/mlibrodo/rds-db-copy/postgres/conn"
@@ -34,15 +39,8 @@ type AssignRDSToIAMUser struct {
 */
 func (in AssignRDSToIAMUser) AssignToIAMUser() (db *rds.RDSInstanceDescriptor, dbUser *string, err error) {
 
-	var awsRegion string
-	if in.AWSRegionOfDB == "" {
-		awsRegion = config.AWSConfig.Region
-	}
-
-	var awsAccountId string
-	if in.AWSAccountIdOfDB == "" {
-		awsAccountId = aws.AWSAccountId
-	}
+	var awsRegion = in.AWSRegionOfDB
+	var awsAccountId = in.AWSAccountIdOfDB
 
 	// Get the lastest info after the instance is up
 	if db, err = rds.DescribeInstance(&in.DBInstanceID); err != nil {
@@ -54,11 +52,10 @@ func (in AssignRDSToIAMUser) AssignToIAMUser() (db *rds.RDSInstanceDescriptor, d
 	policy := iam.AssignDBToUserPolicy{
 		Region:        awsRegion,
 		AccountID:     awsAccountId,
-		DbiResourceId: *db.DBIResourceId,
+		DbiResourceId: db.DBIResourceId,
 		DBUserName:    DBUserName,
-
-		AWSUser:      in.IAMUser,
-		DBInstanceID: in.DBInstanceID,
+		AWSUser:       in.IAMUser,
+		DBInstanceID:  in.DBInstanceID,
 	}
 
 	// 1. Attach the policy for the user
@@ -74,6 +71,7 @@ func (in AssignRDSToIAMUser) AssignToIAMUser() (db *rds.RDSInstanceDescriptor, d
 		Password: in.DBMasterPassword,
 	}
 
+	//Figure out how to catch duplicate user creation
 	queries := []string{
 		fmt.Sprintf("CREATE USER %s", DBUserName),
 		fmt.Sprintf("GRANT rds_iam TO %s", DBUserName),
@@ -92,6 +90,7 @@ func (in AssignRDSToIAMUser) AssignToIAMUser() (db *rds.RDSInstanceDescriptor, d
 	}
 
 	dbUser = &DBUserName
+
 	return db, dbUser, nil
 }
 
@@ -99,6 +98,79 @@ func removeNonAlphaNumeric(s string) string {
 	// Make a Regex to say we only want letters and numbers
 	var reg, _ = regexp.Compile("[^a-zA-Z0-9]+")
 	return reg.ReplaceAllString(s, "")
+}
+
+func AssignCopyToUser(c context.Context, dbConn pgx.Tx, dbCopy DBCopy, iamUser string) (*DBCopy, error) {
+
+	var d *rds.RDSInstanceDescriptor
+	var err error
+
+	d, err = rds.DescribeInstance(&dbCopy.RDSInstanceId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var dbArn arn.ARN
+	// parse the ARN of the db to extract the region and account id
+	dbArn, err = arn.Parse(d.DBInstanceARN)
+
+	if err != nil {
+		return nil, err
+	}
+
+	accountId := dbArn.AccountID
+	region := dbArn.Region
+
+	assign := AssignRDSToIAMUser{
+		IAMUser:          iamUser,
+		DBInstanceID:     d.DBInstanceId,
+		DBName:           dbCopy.DbName,
+		DBMasterUser:     config.GetConfig().AWS.RDS.MasterUsername,
+		DBMasterPassword: config.GetConfig().AWS.RDS.MasterPassword,
+		AWSRegionOfDB:    region,
+		AWSAccountIdOfDB: accountId,
+	}
+
+	d, _, err = assign.AssignToIAMUser()
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = dbConn.Exec(c,
+		`
+UPDATE db_copies SET claimed_by=$1, claimed_dt=$2, expires_dt=$3
+`, iamUser, time.Now(), expireIn(Days30))
+
+	if err != nil {
+		return nil, err
+	}
+
+	var updated *DBCopy
+	// refetch
+	updated, err = GetDBCopy(c, dbConn, dbCopy.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return updated, nil
+
+}
+
+func GetAllUnassignedCopies(c context.Context, dbConn pgx.Tx) ([]*DBCopy, error) {
+	var err error
+	var copies []*DBCopy
+
+	err = pgxscan.Select(c, dbConn, &copies, `
+SELECT * FROM db_copies WHERE claimed_by is null
+`)
+	if err != nil {
+		return nil, err
+	}
+
+	return copies, nil
 }
 
 // Daily delete any unused db_instances

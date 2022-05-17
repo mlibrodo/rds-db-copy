@@ -27,7 +27,7 @@ func NewPGDump(pgConnInfo *Conn, file string) *PGDump {
 // Exec `pg_dump` for specified DB
 func (x *PGDump) Exec() Result {
 
-	execFn := GenericExec(PGDumpCmd, x.Conn, x.ParseArgs)
+	execFn := PGCLIExecutor(PGDumpCmd, x.Conn, x.ParseArgs)
 
 	return execFn()
 }

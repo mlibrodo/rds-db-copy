@@ -1,16 +1,24 @@
+
+databaseURL = "postgresql://localhost:5432/rds_provisioner"
+
 [logging]
-level = 'debug'
+level = "debug"
 jsonLogs = false
 
 [server]
-bindAddress = '127.0.0.1:8081'
+bindAddress = "127.0.0.1:8081"
 
 [aws]
-serviceConfigProfile = ''
+serviceConfigProfile = "personal"
+accountId = "283492314377"
 
 [aws.rds]
-masterUsername = 'xxx'
-masterPassword = ''
+supportedInstanceClasses = ["db.t2.micro"]
+supportedEngines = ["postgres:12.10"]
+subnetGroupNames = ["project-rds-copy-vpc-rds-subnet-group"]
+allowedStorageSizeGBRange = "5:10"
+masterUsername = "superuser"
+masterPassword = "=29#2VwcBJf3hh#9"
 
 [backup]
 s3_bucket = "librodo-db-backups"
@@ -20,15 +28,15 @@ s3_bucket = "librodo-db-backups"
 dbName = "source_db"
 host = "localhost"
 port = 5432
-user="miketatari"
-password=""
+user="admin"
+password="GXAg*93&L6*PPjAP"
 
 [[databases]]
 dbName = "another_source_db"
 host = "localhost"
 port = 5432
-user="miketatari"
-password=""
+user="admin"
+password="GXAg*93&L6*PPjAP"
 
 
 

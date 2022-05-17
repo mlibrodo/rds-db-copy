@@ -14,6 +14,7 @@ type CreateInstance struct {
 	InstanceClass      string
 	SubnetGroupName    string
 	PubliclyAccessible bool
+	Engine             string
 	EngineVersion      string
 	// MasterUser is the initial user to bootstrap the PG RDS instance.
 	// Only alphanumeric usernames are allowed.
@@ -22,28 +23,25 @@ type CreateInstance struct {
 	MasterUser string
 	// MasterPassword password for the MasterUser
 	MasterPassword string
+	StorageSize    int32
 }
 
 func (ins *CreateInstance) makeAWSCreateDBInstanceInput() *rds.CreateDBInstanceInput {
 
-	engine := "postgres"
-	storageSize := int32(5)
-	backupRentention := int32(0) // no backups
-
 	return &rds.CreateDBInstanceInput{
-		AllocatedStorage:                aws.Int32(storageSize),
-		BackupRetentionPeriod:           aws.Int32(backupRentention),
+		AllocatedStorage:                aws.Int32(ins.StorageSize),
 		DBInstanceClass:                 aws.String(ins.InstanceClass),
 		DBInstanceIdentifier:            aws.String(ins.DBInstanceID),
-		Engine:                          aws.String(engine),
+		Engine:                          aws.String(ins.Engine),
 		EngineVersion:                   aws.String(ins.EngineVersion),
 		DBSubnetGroupName:               aws.String(ins.SubnetGroupName),
-		DeletionProtection:              aws.Bool(false),
 		PubliclyAccessible:              aws.Bool(ins.PubliclyAccessible),
-		EnablePerformanceInsights:       aws.Bool(false),
 		MasterUsername:                  aws.String(ins.MasterUser),
 		MasterUserPassword:              aws.String(ins.MasterPassword),
+		EnablePerformanceInsights:       aws.Bool(false),
+		DeletionProtection:              aws.Bool(false),
 		EnableIAMDatabaseAuthentication: aws.Bool(true),
+		BackupRetentionPeriod:           aws.Int32(int32(0)), // no backups
 	}
 }
 
@@ -52,14 +50,14 @@ func (ins *CreateInstance) Exec() (*RDSInstanceDescriptor, error) {
 	svc := rds.NewFromConfig(*config.AWSConfig)
 
 	awsInput := ins.makeAWSCreateDBInstanceInput()
-	dbInstance, err := svc.CreateDBInstance(context.TODO(), awsInput)
+	resp, err := svc.CreateDBInstance(context.TODO(), awsInput)
 
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	db := dbInstance.DBInstance
+	db := resp.DBInstance
 
 	var host string
 	var port int32
@@ -78,9 +76,13 @@ func (ins *CreateInstance) Exec() (*RDSInstanceDescriptor, error) {
 	out := RDSInstanceDescriptor{
 		DBHost:        host,
 		DBPort:        port,
-		DBInstanceId:  db.DBInstanceIdentifier,
-		DBInstanceARN: db.DBInstanceArn,
-		DBIResourceId: db.DbiResourceId,
+		DBInstanceId:  *db.DBInstanceIdentifier,
+		DBInstanceARN: *db.DBInstanceArn,
+		DBIResourceId: *db.DbiResourceId,
+		Engine:        *db.Engine,
+		EngineVersion: *db.EngineVersion,
+		InstanceClass: *db.DBInstanceClass,
+		Status:        *db.DBInstanceStatus,
 	}
 	return &out, nil
 }
